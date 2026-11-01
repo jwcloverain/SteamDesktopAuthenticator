@@ -23,12 +23,16 @@ namespace Steam_Desktop_Authenticator
             lblStatus.Text = "";
         }
 
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public SteamGuardAccount Account
         {
             get { return acc; }
             set { acc = value; lblAccount.Text = acc.AccountName; }
         }
 
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Confirmation[] Confirmations
         {
             get { return confirms.ToArray(); }
