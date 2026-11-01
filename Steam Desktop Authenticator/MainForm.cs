@@ -19,6 +19,7 @@ namespace Steam_Desktop_Authenticator
         private List<string> updatedSessions = new List<string>();
         private Manifest manifest;
         private static SemaphoreSlim confirmationsSemaphore = new SemaphoreSlim(1, 1);
+        private readonly HashSet<ulong> loginSessionsBeingShown = new HashSet<ulong>();
 
         private long steamTime = 0;
         private long currentSteamChunk = 0;
@@ -500,6 +501,32 @@ namespace Steam_Desktop_Authenticator
                     {
                         var confirmations = autoAcceptConfirmations[acc].ToArray();
                         await acc.AcceptMultipleConfirmations(confirmations);
+                    }
+                }
+
+                // Login approvals are backed by IAuthenticationService and are deliberately
+                // handled separately from the mobile trade-confirmation endpoints above.
+                foreach (var acc in accs)
+                {
+                    try
+                    {
+                        LoginSessionConfirmation[] sessions = await acc.FetchLoginSessionsAsync();
+                        foreach (LoginSessionConfirmation session in sessions)
+                        {
+                            if (loginSessionsBeingShown.Contains(session.ClientID)) continue;
+                            loginSessionsBeingShown.Add(session.ClientID);
+                            using (var dialog = new LoginSessionPopupForm(acc, session))
+                            {
+                                dialog.ShowDialog(this);
+                                if (dialog.DialogResult == DialogResult.Yes)
+                                    Hide();
+                            }
+                            loginSessionsBeingShown.Remove(session.ClientID);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // A session can disappear between listing and approval; ignore it and retry next tick.
                     }
                 }
             }
