@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using SteamAuth;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Net;
-using Newtonsoft.Json;
 using System.Threading;
 using System.Drawing;
 using System.Linq;
@@ -87,8 +84,6 @@ namespace Steam_Desktop_Authenticator
 
             loadSettings();
             loadAccountsList();
-
-            checkForUpdates();
 
             if (startSilent)
             {
@@ -195,18 +190,6 @@ namespace Steam_Desktop_Authenticator
             {
                 passKey = manifest.PromptSetupPassKey();
                 this.loadAccountsList();
-            }
-        }
-
-        private void labelUpdate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (newVersion == null || currentVersion == null)
-            {
-                checkForUpdates();
-            }
-            else
-            {
-                compareVersions();
             }
         }
 
@@ -646,63 +629,6 @@ namespace Steam_Desktop_Authenticator
         {
             timerTradesPopup.Enabled = manifest.PeriodicChecking;
             timerTradesPopup.Interval = manifest.PeriodicCheckingInterval * 1000;
-        }
-
-        // Logic for version checking
-        private Version newVersion = null;
-        private Version currentVersion = null;
-        private WebClient updateClient = null;
-        private string updateUrl = null;
-        private bool startupUpdateCheck = true;
-
-        private void checkForUpdates()
-        {
-            if (updateClient != null) return;
-            updateClient = new WebClient();
-            updateClient.DownloadStringCompleted += UpdateClient_DownloadStringCompleted;
-            updateClient.Headers.Add("Content-Type", "application/json");
-            updateClient.Headers.Add("User-Agent", "Steam Desktop Authenticator");
-            updateClient.DownloadStringAsync(new Uri("https://api.github.com/repos/jwcloverain/SteamDesktopAuthenticator/releases/latest"));
-        }
-
-        private void compareVersions()
-        {
-            if (newVersion > currentVersion)
-            {
-                labelUpdate.Text = "Download new version"; // Show the user a new version is available if they press no
-                DialogResult updateDialog = MessageBox.Show(String.Format("A new version is available! Would you like to download it now?\nYou will update from version {0} to {1}", Application.ProductVersion, newVersion.ToString()), "New Version", MessageBoxButtons.YesNo);
-                if (updateDialog == DialogResult.Yes)
-                {
-                    Process.Start(updateUrl);
-                }
-            }
-            else
-            {
-                if (!startupUpdateCheck)
-                {
-                    MessageBox.Show(String.Format("You are using the latest version: {0}", Application.ProductVersion));
-                }
-            }
-
-            newVersion = null; // Check the api again next time they check for updates
-            updateClient = null; // Set to null to indicate it's done checking
-            startupUpdateCheck = false; // Set when it's done checking on startup
-        }
-
-        private void UpdateClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
-        {
-            try
-            {
-                dynamic resultObject = JsonConvert.DeserializeObject(e.Result);
-                newVersion = new Version(resultObject.tag_name.Value);
-                currentVersion = new Version(Application.ProductVersion);
-                updateUrl = resultObject.assets.First.browser_download_url.Value;
-                compareVersions();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Failed to check for updates.");
-            }
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)

@@ -1,16 +1,19 @@
 name: Build and release
 
 on:
-  push:
-    tags:
-      - 'v1.0.16'
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (for example: 1.0.16)'
+        required: true
+        default: '1.0.16'
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ inputs.version }}
   cancel-in-progress: false
 
 jobs:
@@ -23,10 +26,18 @@ jobs:
         shell: pwsh
     env:
       PROJECT_PATH: Steam Desktop Authenticator/Steam Desktop Authenticator.csproj
-      RELEASE_TAG: v1.0.16
-      RELEASE_TITLE: Version 1.0.16
-      ARCHIVE_NAME: SteamDesktopAuthenticator-1.0.16-win-x64.zip
     steps:
+      - name: Validate release version
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          if ($env:RELEASE_VERSION -notmatch '\A(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\z') {
+            throw 'Enter a release version in major.minor.patch format, for example 1.0.16.'
+          }
+          "RELEASE_TAG=v$env:RELEASE_VERSION" >> $env:GITHUB_ENV
+          "RELEASE_TITLE=Version $env:RELEASE_VERSION" >> $env:GITHUB_ENV
+          "ARCHIVE_NAME=SteamDesktopAuthenticator-$env:RELEASE_VERSION-win-x64.zip" >> $env:GITHUB_ENV
+
       - name: Check out source and pinned submodules
         uses: actions/checkout@v4
         with:
