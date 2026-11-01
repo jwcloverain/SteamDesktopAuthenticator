@@ -662,7 +662,7 @@ namespace Steam_Desktop_Authenticator
             updateClient.DownloadStringCompleted += UpdateClient_DownloadStringCompleted;
             updateClient.Headers.Add("Content-Type", "application/json");
             updateClient.Headers.Add("User-Agent", "Steam Desktop Authenticator");
-            updateClient.DownloadStringAsync(new Uri("https://api.github.com/repos/Jessecar96/SteamDesktopAuthenticator/releases/latest"));
+            updateClient.DownloadStringAsync(new Uri("https://api.github.com/repos/jwcloverain/SteamDesktopAuthenticator/releases/latest"));
         }
 
         private void compareVersions()
