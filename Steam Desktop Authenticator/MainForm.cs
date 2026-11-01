@@ -32,6 +32,7 @@ namespace Steam_Desktop_Authenticator
         public MainForm()
         {
             InitializeComponent();
+            panelButtons_SizeChanged(panelButtons, EventArgs.Empty);
         }
 
         public void SetEncryptionKey(string key)
@@ -121,6 +122,17 @@ namespace Steam_Desktop_Authenticator
             var loginForm = new LoginForm();
             loginForm.ShowDialog();
             this.loadAccountsList();
+        }
+
+        private void btnSteamSignIn_Click(object sender, EventArgs e)
+        {
+            if (currentAccount == null)
+            {
+                MessageBox.Show("请先选择一个已导入 Steam 验证器的账号。", "Steam 登录", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            using (var form = new LoginSessionsForm(currentAccount))
+                form.ShowDialog(this);
         }
 
         private void btnTradeConfirmations_Click(object sender, EventArgs e)
@@ -518,8 +530,6 @@ namespace Steam_Desktop_Authenticator
                             using (var dialog = new LoginSessionPopupForm(acc, session))
                             {
                                 dialog.ShowDialog(this);
-                                if (dialog.DialogResult == DialogResult.Yes)
-                                    Hide();
                             }
                             loginSessionsBeingShown.Remove(session.ClientID);
                         }

@@ -39,6 +39,7 @@
             this.listAccounts = new System.Windows.Forms.ListBox();
             this.timerSteamGuard = new System.Windows.Forms.Timer(this.components);
             this.btnTradeConfirmations = new System.Windows.Forms.Button();
+            this.btnSteamSignIn = new System.Windows.Forms.Button();
             this.btnManageEncryption = new System.Windows.Forms.Button();
             this.groupAccount = new System.Windows.Forms.GroupBox();
             this.labelVersion = new System.Windows.Forms.Label();
@@ -140,9 +141,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listAccounts.FormattingEnabled = true;
-            this.listAccounts.Location = new System.Drawing.Point(12, 217);
+            this.listAccounts.Location = new System.Drawing.Point(12, 254);
             this.listAccounts.Name = "listAccounts";
-            this.listAccounts.Size = new System.Drawing.Size(310, 186);
+            this.listAccounts.Size = new System.Drawing.Size(310, 149);
             this.listAccounts.TabIndex = 3;
             this.listAccounts.SelectedValueChanged += new System.EventHandler(this.listAccounts_SelectedValueChanged);
             this.listAccounts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listAccounts_KeyDown);
@@ -155,7 +156,8 @@
             // 
             // btnTradeConfirmations
             // 
-            this.btnTradeConfirmations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTradeConfirmations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnTradeConfirmations.Enabled = false;
             this.btnTradeConfirmations.Location = new System.Drawing.Point(6, 19);
             this.btnTradeConfirmations.Name = "btnTradeConfirmations";
@@ -164,6 +166,18 @@
             this.btnTradeConfirmations.Text = "View Confirmations";
             this.btnTradeConfirmations.UseVisualStyleBackColor = true;
             this.btnTradeConfirmations.Click += new System.EventHandler(this.btnTradeConfirmations_Click);
+            //
+            // btnSteamSignIn
+            //
+            this.btnSteamSignIn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSteamSignIn.Location = new System.Drawing.Point(6, 56);
+            this.btnSteamSignIn.Name = "btnSteamSignIn";
+            this.btnSteamSignIn.Size = new System.Drawing.Size(298, 31);
+            this.btnSteamSignIn.TabIndex = 5;
+            this.btnSteamSignIn.Text = "Steam 登录（扫码 / 登录请求）";
+            this.btnSteamSignIn.UseVisualStyleBackColor = true;
+            this.btnSteamSignIn.Click += new System.EventHandler(this.btnSteamSignIn_Click);
             // 
             // btnManageEncryption
             // 
@@ -181,9 +195,10 @@
             this.groupAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupAccount.Controls.Add(this.btnTradeConfirmations);
+            this.groupAccount.Controls.Add(this.btnSteamSignIn);
             this.groupAccount.Location = new System.Drawing.Point(12, 155);
             this.groupAccount.Name = "groupAccount";
-            this.groupAccount.Size = new System.Drawing.Size(310, 56);
+            this.groupAccount.Size = new System.Drawing.Size(310, 93);
             this.groupAccount.TabIndex = 7;
             this.groupAccount.TabStop = false;
             this.groupAccount.Text = "Account";
@@ -470,6 +485,7 @@
         private System.Windows.Forms.ProgressBar pbTimeout;
         private System.Windows.Forms.TextBox txtLoginToken;
         private System.Windows.Forms.ListBox listAccounts;
+        private System.Windows.Forms.Button btnSteamSignIn;
         private System.Windows.Forms.Timer timerSteamGuard;
         private System.Windows.Forms.Button btnTradeConfirmations;
         private System.Windows.Forms.Button btnManageEncryption;
